@@ -16,6 +16,7 @@ from flcore.servers.serverfml import FML
 from flcore.servers.serverkd import FedKD
 from flcore.servers.servergh import FedGH
 from flcore.servers.servertgp import FedTGP
+from flcore.servers.servermgp import FedMGP
 from flcore.servers.serverktl_stylegan_xl import FedKTL as FedKTL_stylegan_xl
 from flcore.servers.serverktl_stylegan_3 import FedKTL as FedKTL_stylegan_3
 from flcore.servers.serverktl_stable_diffusion import FedKTL as FedKTL_stable_diffusion
@@ -288,6 +289,9 @@ def run(args):
 
         elif args.algorithm == "FedTGP":
             server = FedTGP(args, i)
+
+        elif args.algorithm == "FedMGP":
+            server = FedMGP(args, i)
             
         elif args.algorithm == "FedKTL-stylegan-xl":
             server = FedKTL_stylegan_xl(args, i)
@@ -400,6 +404,15 @@ if __name__ == "__main__":
     parser.add_argument('-gbs', "--gen_batch_size", type=int, default=4,
                         help="Not related to the performance. A small value saves GPU memory.")
     parser.add_argument('-mu', "--mu", type=float, default=50.0)
+    # FedMGP
+    parser.add_argument('-nsp', "--num_sub_protos", type=int, default=2,
+                        help="Number of sub-prototypes per class (K in K-Means)")
+    parser.add_argument('-tm', "--triplet_margin", type=float, default=1.0,
+                        help="Margin for triplet contrastive loss")
+    parser.add_argument('-cw', "--contrastive_weight", type=float, default=1.0,
+                        help="Weight for contrastive loss (separate from lamda for MSE)")
+    parser.add_argument('-wr', "--warmup_rounds", type=int, default=3,
+                        help="Number of warmup rounds using MSE only before adding contrastive loss")
     # FedMRL
     parser.add_argument('-sfd', "--sub_feature_dim", type=int, default=128)
 
